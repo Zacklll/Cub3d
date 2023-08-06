@@ -6,14 +6,17 @@
 /*   By: zael-wad <zael-wad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/31 14:18:38 by zael-wad          #+#    #+#             */
-/*   Updated: 2023/08/02 19:48:06 by zael-wad         ###   ########.fr       */
+/*   Updated: 2023/08/06 20:20:23 by zael-wad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub3d.h"
 #include <math.h>
 
-
+void	destroy_fun()
+{
+	exit (3);
+}
 int	mouse_press(t_var *data)
 {
 	mlx_destroy_window(data->mlx, data->mlx_win);
@@ -25,45 +28,61 @@ int	mouse_press(t_var *data)
 void	my_mlx_pixel_put(t_var *data, int x, int y, int color)
 {
 	char	*dst;
-
-	dst = data->addr + (y * data->line_length + x * (data->bits_per_pixel / 8));
-	*(unsigned int*)dst = color;
+	if (x > 0 && y > 0 && x < x_width(data->map2d) && y < y_height(data->map2d))
+	{
+		dst = data->addr + (y * data->line_length + x * (data->bits_per_pixel / 8));
+		*(unsigned int*)dst = color;
+	}
 }
 
 
-void	cast_line(t_var *data)
+void	first_draw_line(t_var *data)
 {
-	int dx;
-	int dy;
+	double dx;
+	double dy;
 	
 	int x;
 	int y;
-	int step;
+	double step;
 	double x_inc;
 	double y_inc;
+	double	x_nearest;
+	double	y_nearest;
 	int i;
 	
 	i = 0;
-	data->player_pos.line_x_start = data->player_pos.player_x; 
-	data->player_pos.line_y_start = data->player_pos.player_y;
-	dx = data->player_pos.x_line_end -  data->player_pos.line_x_start;
-	dy = data->player_pos.y_line_end -  data->player_pos.line_y_start;
-	if (abs(dx) > abs(dy))
-		step = abs(dx);
+	data->player_pos.angle_in_radian = PI;
+    data->player_pos.save_x_inc = cos(data->player_pos.angle_in_radian) * LINE_LENTH;
+    data->player_pos.save_y_inc = sin(data->player_pos.angle_in_radian) * LINE_LENTH;
+	
+	dx = data->player_pos.x_line_end - data->player_pos.line_x_start;
+	dy = data->player_pos.y_line_end - data->player_pos.line_y_start;
+
+
+	// y_nearest = data->player_pos.player_y - ((data->tmp_player_y / 50) * 50);
+	// x_nearest = y_nearest / tan(data->player_pos.angle_in_radian);
+
+	// data->player_pos.x_line_end = cos(data->player_pos.angle_in_radian) * x_nearest;
+	// data->player_pos.y_line_end = sin(data->player_pos.angle_in_radian) * y_nearest;
+	// y_nearest += data->player_pos.player_y;
+	// x_nearest += data->player_pos.player_x;
+	// dx = data->player_pos.x_line_end - data->player_pos.line_x_start;
+	// dy = data->player_pos.y_line_end - data->player_pos.line_y_start;
+	
+	if (fabs(dx) > fabs(dy))
+		step = fabs(dx);
 	else
-		step = abs(dy);
-	
-	x_inc = (double)dx / step;
-	y_inc = (double)dy / step;
-	
-	// printf("%f==\n" ,data->player_pos.line_x_start + x_inc);
-	// printf("end--====%f==\n",data->player_pos.y_line_end );
+		step = fabs(dy);
+	x_inc = dx / step;
+	y_inc = dy / step;
 	
 	while (i <= step)
 	{
 		if (data->map2d[(int)data->player_pos.line_y_start / 50][(int)data->player_pos.line_x_start / 50] != '1')
 		{
 				my_mlx_pixel_put(data, (int)data->player_pos.line_x_start, (int)data->player_pos.line_y_start, 0x00000000);
+				// data->player_pos.line_x_start = data->player_pos.player_x; 
+				// data->player_pos.line_y_start = data->player_pos.player_y;
 			data->player_pos.line_x_start += x_inc;
 			data->player_pos.line_y_start += y_inc;
 		}
@@ -71,153 +90,213 @@ void	cast_line(t_var *data)
 	}
 }
 
-int	first_rander_map2d(t_var *img)
+
+void	draw_line(t_var *data)
 {
+	double dx;
+	double dy;
 	
-	img->player_pos.map2d_x = 0;
-	while (img->map2d[img->player_pos.map2d_x])
+	int x;
+	int y;
+	double step;
+	double x_inc;
+	double y_inc;
+	double	x_nearest;
+	double	y_nearest;
+	int i;
+	
+	i = 0;
+	// data->player_pos.angle_in_radian = PI;
+    // data->player_pos.save_x_inc = cos(data->player_pos.angle_in_radian) * LINE_LENTH;
+    // data->player_pos.save_y_inc = sin(data->player_pos.angle_in_radian) * LINE_LENTH;
+	data->player_pos.line_x_start = data->player_pos.player_x; 
+	data->player_pos.line_y_start = data->player_pos.player_y;
+	dx = data->player_pos.x_line_end - data->player_pos.line_x_start;
+	dy = data->player_pos.y_line_end - data->player_pos.line_y_start;
+
+
+	// y_nearest = data->player_pos.player_y - ((data->tmp_player_y / 50) * 50);
+	// x_nearest = y_nearest / tan(data->player_pos.angle_in_radian);
+
+	// data->player_pos.x_line_end = cos(data->player_pos.angle_in_radian) * x_nearest;
+	// data->player_pos.y_line_end = sin(data->player_pos.angle_in_radian) * y_nearest;
+	// y_nearest += data->player_pos.player_y;
+	// x_nearest += data->player_pos.player_x;
+	// dx = data->player_pos.x_line_end - data->player_pos.line_x_start;
+	// dy = data->player_pos.y_line_end - data->player_pos.line_y_start;
+	
+	if (fabs(dx) > fabs(dy))
+		step = fabs(dx);
+	else
+		step = fabs(dy);
+	x_inc = dx / step;
+	y_inc = dy / step;
+	
+	while (i <= step)
 	{
-		img->player_pos.map2d_y = 0;
-		while (img->map2d[img->player_pos.map2d_x][img->player_pos.map2d_y])
+		if (data->player_pos.x_line_end > 0 && data->player_pos.y_line_end > 0)
 		{
-			if (img->map2d[img->player_pos.map2d_x][img->player_pos.map2d_y] == '1')
-				fill_wall(img,(img->player_pos.map2d_x + 1) * 50,  (img->player_pos.map2d_y + 1) * 50);
-			else if (img->map2d[img->player_pos.map2d_x][img->player_pos.map2d_y] == '0')
-				first_fill_ground(img,  (img->player_pos.map2d_x + 1) * 50, (img->player_pos.map2d_y + 1) * 50);
-			else if (img->map2d[img->player_pos.map2d_x][img->player_pos.map2d_y] == 'P')
-				player_fill(img, (img->player_pos.map2d_x + 1) * 50,  (img->player_pos.map2d_y + 1) * 50);
-			img->player_pos.map2d_y++;
+			if (data->map2d[(int)data->player_pos.line_y_start / 50][(int)data->player_pos.line_x_start / 50] != '1')
+			{
+					my_mlx_pixel_put(data, (int)data->player_pos.line_x_start, (int)data->player_pos.line_y_start, 0x00000000);
+				data->player_pos.line_x_start += x_inc;
+				data->player_pos.line_y_start += y_inc;
+			}
+			i++;
 		}
-		img->player_pos.map2d_x++;
 	}
-	cast_line(img);
-	mlx_put_image_to_window(img->mlx, img->mlx_win, img->img, 0, 0);
-	return (0);
 }
 
-// void	cast_line(t_var *data)
-// {
-// 	double	dx;
-// 	double	dy;
-// 	int		steps;
-// 	double	x_inc;
-// 	double	y_inc;
-
-// 	dx = data->player_pos.x_line_end -  data->player_pos.player_x;
-// 	dy = data->player_pos.y_line_end -  data->player_pos.player_y;
-// 	if (fabs(dx) > fabs(dy))
-// 		steps = fabs(dx);
-// 	else
-// 		steps = fabs(dy);
-// 	x_inc = dx / steps;
-// 	y_inc = dy / steps;
-// 	dx = data->player_pos.player_x;
-// 	dy = data->player_pos.player_y;
-// 	while (steps >= 0)
-// 	{
-// 		my_mlx_pixel_put(data, (int)((dx)), (int)((dy)), 0x00000000);
-// 		dx += x_inc;
-// 		dy += y_inc;
-// 		steps--;
-// 	}
-// }
-
-
-int	rander_map2d(t_var *img, int key)
+void	horizotal_ray(t_var *data)
 {
-	img->player_pos.map2d_x = 0;
-	while (img->map2d[img->player_pos.map2d_x])
+	double alpha_y;
+	double alpha_x;
+	double dy;
+	double dx;
+	double tmp;
+
+
+	
+	double ys;
+	double xs;
+	double old_xs;
+	double old_ys;
+	
+	if(sin(data->player_pos.angle_in_radian) == 0 || cos(data->player_pos.angle_in_radian) == 0)
+		return;
+	alpha_y = floor((int)data->player_pos.player_y / GRIDE_SIZE) * 50 - 1;
+	dy = data->player_pos.player_y - alpha_y;
+	alpha_x = fabs(dy / tan(data->player_pos.angle_in_radian));
+	if (data->player_pos.angle_in_radian >= 1.5708 && data->player_pos.angle_in_radian <= 4.71239)
 	{
-		img->player_pos.map2d_y = 0;
-		while (img->map2d[img->player_pos.map2d_x][img->player_pos.map2d_y ])
-		{
-			if (img->map2d[img->player_pos.map2d_x][img->player_pos.map2d_y ] == '1')
-				fill_wall(img,(img->player_pos.map2d_x + 1) * 50,  (img->player_pos.map2d_y  + 1) * 50);
-			else if (img->map2d[img->player_pos.map2d_x][img->player_pos.map2d_y ] != '1')
-				fill_ground(img,  (img->player_pos.map2d_x + 1) * 50, (img->player_pos.map2d_y + 1) * 50, key);
-			img->player_pos.map2d_y++;
-		}
-		img->player_pos.map2d_x++;
+		alpha_x = data->player_pos.player_x - alpha_x;
 	}
-	cast_line(img);
-	my_mlx_pixel_put(img, img->player_pos.player_x, img->player_pos.player_y,0x00000000);
-	mlx_put_image_to_window(img->mlx, img->mlx_win, img->img, 0, 0);
-	return (0);
+	else 
+		alpha_x = data->player_pos.player_x + alpha_x;
+	
+	if (data->player_pos.angle_in_radian >= 0 && data->player_pos.angle_in_radian <= 1.5708)
+		ys = GRIDE_SIZE;	
+	else
+		ys = -GRIDE_SIZE;
+	
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           	old_ys = ys;
+	old_xs = xs;
+	if (alpha_x < 0 || alpha_y < 0 || alpha_x > x_width(data->map2d) || alpha_y > y_height(data->map2d))
+		return;
+	else if (data->map2d[(int)alpha_x / GRIDE_SIZE][(int)alpha_y /GRIDE_SIZE] != '1')
+	{
+		data->player_pos.x_line_end = alpha_x;
+		data->player_pos.y_line_end = alpha_y;
+		draw_line(data);
+	}
+	// else
+	// {
+	// 	xs = xs + alpha_x;
+	// 	ys = ys + alpha_y;
+	// 	while (1)
+	// 	{
+	// 		if (xs < 0 || ys < 0 || xs > x_width(data->map2d) || ys > y_height(data->map2d))
+	// 			break;
+	// 		if (data->map2d[(int)xs / 50][(int)ys / 50])
+	// 		{
+	// 			data->player_pos.x_line_end = xs;
+	// 			data->player_pos.y_line_end = ys;
+	// 			return (draw_line(data));		
+	// 		}
+	// 		// else
+	// 		// {
+	// 			xs = old_xs + xs;
+	// 			ys = old_ys + ys;
+	// 		// }
+	// 	}
+	// }
+	// data->player_pos.x_line_end = alpha_x;
+	// data->player_pos.y_line_end = alpha_y;
+	// draw_line(data);
+	
+}
+
+void	virtical_ray(t_var *data)
+{
+	double alpha_y;
+	double alpha_x;
+	double dy;
+	double dx;
+	double tmp;
+
+	double ys;
+	double xs;
+
+	// printf("test\n");
+	if(sin(data->player_pos.angle_in_radian) == 0 || cos(data->player_pos.angle_in_radian) == 0)
+		return;
+		
+	ys = GRIDE_SIZE;
+	alpha_x = floor((int)data->player_pos.player_x / GRIDE_SIZE) * 50;
+	printf("floor=%f\n",data->player_pos.angle_in_radian);
+	// printf("floor=%d\n",(int)alpha_x);
+	if(cos(data->player_pos.angle_in_radian) > 0)
+		alpha_x += 50;
+		
+	dx = data->player_pos.player_x - alpha_x;
+	alpha_y = dx * tan(data->player_pos.angle_in_radian);
+
+	alpha_y += data->player_pos.player_y;
+	data->player_pos.x_line_end = alpha_x;
+	data->player_pos.y_line_end = alpha_y;
+	
+	// printf("player->dx  =%d\n", (int)alpha_x);
+	// printf("player->dy  =%d\n", (int)dy);
+	// printf("player->x  =%d\n", (int)data->player_pos.player_x);
+	// printf("player->y  =%d\n", (int)data->player_pos.player_y);
+	
+	// if ((int)alpha_x > 0 && (int)alpha_y > 0 && (int)alpha_x < x_width(data->map2d) && (int)alpha_y < y_height(data->map2d) )
+	// {
+	// 	// if (data->map2d[(int)alpha_x / 50][(int)alpha_y / 50] == '1')
+	// 	// {
+	// 	// 	// draw_line(data);
+	// 	// 	return;
+	// 	// }
+	// }
+	draw_line(data);
 }
 
 int move_player(int i, t_var *data)
 {
-	// if (i == 53)
-		// destroy_fun(data);
-	int x;
-	int y;
-	double y_inc;
-	double x_inc;
-	x = data->player_pos.player_x;
-	y  = data->player_pos.player_y;
-	if (i == 1)
-	{
-		y  = data->player_pos.player_y - 1;
-		// move_up();
-	}
-	else if (i == 13)
-	{
-		y  = data->player_pos.player_y + 1;
-		// move_down();
-	}
+	data->tmp_player_x = data->player_pos.player_x;
+	data->tmp_player_y  = data->player_pos.player_y;
+	if (i == 53)
+		destroy_fun();
+	if (i == 13)
+		move_forward(data);
+	else if (i == 1)
+		move_back(data);
 	else if (i == 0)
-	{
-		x  = data->player_pos.player_x + 1;
-		// move_right();
-	}
+		move_left(data);
 	else if (i == 2)
-	{
-		x  = data->player_pos.player_x - 1;
-		// move_left();
-	}
+		move_right(data);
 	else if (i == 124)
-	{	
-		data->player_pos.angle_in_radian += 0.1;
-		data->player_pos.save_x_inc = cos(data->player_pos.angle_in_radian) * 30;
-		data->player_pos.save_y_inc = sin(data->player_pos.angle_in_radian) * 30;
-		
-		data->player_pos.x_line_end = data->player_pos.player_x  + data->player_pos.save_x_inc;
-		data->player_pos.y_line_end =  data->player_pos.player_y + data->player_pos.save_y_inc;
-	}
+		rotate_right(data);
 	else if (i == 123)
-	{	
-		data->player_pos.angle_in_radian -= 0.1;
-		
-		data->player_pos.save_x_inc = cos(data->player_pos.angle_in_radian) * 30;
-		data->player_pos.save_y_inc = sin(data->player_pos.angle_in_radian) * 30;
-		
-		data->player_pos.x_line_end = data->player_pos.player_x + data->player_pos.save_x_inc;
-		data->player_pos.y_line_end =  data->player_pos.player_y + data->player_pos.save_y_inc;
-	}
-	
-	data->player_pos.x_line_end = data->player_pos.player_x + 	data->player_pos.save_x_inc;
-	data->player_pos.y_line_end =  data->player_pos.player_y +  data->player_pos.save_y_inc;
-	if (data->map2d[y / 50][x / 50] != '1')
+		rotate_left(data);
+	if (data->map2d[(int)data->tmp_player_y / 50][(int)data->tmp_player_x / 50] != '1')
 	{
-		data->player_pos.player_y  = y;
-		data->player_pos.player_x  = x;
-		rander_map2d(data, i);
+		data->player_pos.player_y  =  data->tmp_player_y;
+		data->player_pos.player_x  =  data->tmp_player_x;
+		data->player_pos.x_line_end = data->player_pos.player_x + data->player_pos.save_x_inc;
+		data->player_pos.y_line_end = data->player_pos.player_y + data->player_pos.save_y_inc;
+		rander_map2d(data);
 	}
-	
 	return (1);
 }
 
 
 int main(int ac , char **av)
 {
- 	// void	*mlx;
-	// void	*mlx_win;
 	int fd;
     t_var img;
-	// t_player *data;
 
     (void)ac;
-	// img = malloc(sizeof(t_var));
 	fd = open(av[1], O_RDONLY);
  	img.map2d = ftt_split(&img, fd);
 	img.mlx = mlx_init();
@@ -226,12 +305,17 @@ int main(int ac , char **av)
 	img.addr = mlx_get_data_addr(img.img, &img.bits_per_pixel, &img.line_length, &img.endian);	
 	img.player_pos.player_x = 0;
 	img.player_pos.player_y = 0;
+	img.player_pos.player_speed = 3;
+	img.store_cos = 0;
+	img.store_sin = 0;
+	img.player_pos.angle_in_radian = ROTATE_ANGLE;
 	
 	// img.player_pos.angle_in_radian = 0.1;
 	
 	
 	// mlx_loop_hook(img.mlx , rander_map2d, &img);
 	first_rander_map2d(&img);
+
 	// img.player_pos.x_line_end = img.player_pos.player_x + cos(img.player_pos.angle_in_radian) * 30;
 	// img.player_pos.y_line_end = img.player_pos.player_y + sin(img.player_pos.angle_in_radian) * 30;
 	mlx_hook(img.mlx_win, 2, 1L<<1, move_player, &img);
