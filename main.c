@@ -6,7 +6,7 @@
 /*   By: zael-wad <zael-wad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/31 14:18:38 by zael-wad          #+#    #+#             */
-/*   Updated: 2023/08/06 20:20:23 by zael-wad         ###   ########.fr       */
+/*   Updated: 2023/08/06 20:49:06 by zael-wad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,11 +28,11 @@ int	mouse_press(t_var *data)
 void	my_mlx_pixel_put(t_var *data, int x, int y, int color)
 {
 	char	*dst;
-	if (x > 0 && y > 0 && x < x_width(data->map2d) && y < y_height(data->map2d))
-	{
+	// if (x > 0 && y > 0 && x < x_width(data->map2d) && y < y_height(data->map2d))
+	// {
 		dst = data->addr + (y * data->line_length + x * (data->bits_per_pixel / 8));
 		*(unsigned int*)dst = color;
-	}
+	// }
 }
 
 
@@ -174,16 +174,20 @@ void	horizotal_ray(t_var *data)
 	else 
 		alpha_x = data->player_pos.player_x + alpha_x;
 	
-	if (data->player_pos.angle_in_radian >= 0 && data->player_pos.angle_in_radian <= 1.5708)
-		ys = GRIDE_SIZE;	
-	else
-		ys = -GRIDE_SIZE;
+	// if (data->player_pos.angle_in_radian >= 0 && data->player_pos.angle_in_radian <= 1.5708)
+	// 	ys = GRIDE_SIZE;	
+	// else
+	// 	ys = -GRIDE_SIZE;
 	
+	printf("alpha_x=%d\n",(int)alpha_x / GRIDE_SIZE);
+	printf("alpha_y=%d\n",(int)alpha_y / GRIDE_SIZE);
+	printf("x=%d\n",x_width(data->map2d));
+	printf("y=%d\n",y_height(data->map2d));
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            	old_ys = ys;
 	old_xs = xs;
-	if (alpha_x < 0 || alpha_y < 0 || alpha_x > x_width(data->map2d) || alpha_y > y_height(data->map2d))
+	if (alpha_x < 0 || alpha_y < 0 || alpha_y > x_width(data->map2d) || alpha_x > y_height(data->map2d))
 		return;
-	else if (data->map2d[(int)alpha_x / GRIDE_SIZE][(int)alpha_y /GRIDE_SIZE] != '1')
+	else if (data->map2d[(int)alpha_y / GRIDE_SIZE][(int)alpha_x /GRIDE_SIZE] != '1')
 	{
 		data->player_pos.x_line_end = alpha_x;
 		data->player_pos.y_line_end = alpha_y;

@@ -6,22 +6,22 @@
 /*   By: zael-wad <zael-wad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/01 18:24:26 by zael-wad          #+#    #+#             */
-/*   Updated: 2023/08/05 21:21:38 by zael-wad         ###   ########.fr       */
+/*   Updated: 2023/08/06 20:51:27 by zael-wad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 
 #include "cub3d.h"
 
-void	player_fill(t_var *img, int x, int y)
+void	player_fill(t_var *img, int y, int x)
 {
 	int i;
 	int j;
 
-	i = x - 50;
+	i = y - 50;
 	while (i < x)
 	{
-		j = y - 50;
+		j = x - 50;
 		while (j < y)
 		{
 			if (j % 50 == 0 || i % 50 == 0)
@@ -40,17 +40,15 @@ void	player_fill(t_var *img, int x, int y)
 	}
 }
 
-void	update_player_pos(t_var *img, int x, int y, int key)
+void	update_player_pos(t_var *img, int y, int x, int key)
 {
 	int i;
 	int j;
 
-	i = x - 50;
-
-	
+	i = y - 50;
 	while (i < x)
 	{
-		j = y - 50;
+		j = x - 50;
 		while (j < y)
 		{
 			if (j % 50 == 0 || i % 50 == 0)
@@ -63,15 +61,15 @@ void	update_player_pos(t_var *img, int x, int y, int key)
 	}
 }
 
-void	fill_wall(t_var *img, int x, int y)
+void	fill_wall(t_var *img, int y, int x)
 {
 	int i;
 	int j;
 
-	i = x - 50;
+	i = y - 50;
 	while (i < x)
 	{
-		j = y - 50;
+		j = x - 50;
 		while (j  < y)
 		{
 			if (j % 50 == 0 || i % 50 == 0)
@@ -85,16 +83,16 @@ void	fill_wall(t_var *img, int x, int y)
 }
 
 
-void	fill_ground(t_var *img, int x, int y)
+void	fill_ground(t_var *img, int y, int x)
 {
 	int i ;
 	int j ;
 	
-	i = x - 50;
+	i = y - 50;
 
 	while (i < x)
 	{
-		j = y - 50;
+		j = x - 50;
 		while (j < y)
 		{
 			if (j % 50 == 0 || i % 50 == 0)
@@ -109,15 +107,15 @@ void	fill_ground(t_var *img, int x, int y)
 	}
 }
 
-void	first_fill_ground(t_var *img, int x, int y)
+void	first_fill_ground(t_var *img, int y, int x)
 {
 	int i ;
 	int j ;
 	
-	i = x - 50;
+	i = y - 50;
 	while (i < x)
 	{
-		j = y - 50;
+		j = x - 50;
 		while (j < y)
 		{
 			if (j % 50 == 0 || i % 50 == 0)

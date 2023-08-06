@@ -6,7 +6,7 @@
 /*   By: zael-wad <zael-wad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/04 22:45:34 by zael-wad          #+#    #+#             */
-/*   Updated: 2023/08/06 18:56:37 by zael-wad         ###   ########.fr       */
+/*   Updated: 2023/08/06 20:47:42 by zael-wad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,21 +15,21 @@
 int	first_rander_map2d(t_var *img)
 {
 	
-	img->player_pos.map2d_x = 0;
-	while (img->map2d[img->player_pos.map2d_x])
+	img->player_pos.map2d_y = 0;
+	while (img->map2d[img->player_pos.map2d_y])
 	{
-		img->player_pos.map2d_y = 0;
-		while (img->map2d[img->player_pos.map2d_x][img->player_pos.map2d_y])
+		img->player_pos.map2d_x = 0;
+		while (img->map2d[img->player_pos.map2d_y][img->player_pos.map2d_x])
 		{
-			if (img->map2d[img->player_pos.map2d_x][img->player_pos.map2d_y] == '1')
-				fill_wall(img,(img->player_pos.map2d_x + 1) * 50,  (img->player_pos.map2d_y + 1) * 50);
-			else if (img->map2d[img->player_pos.map2d_x][img->player_pos.map2d_y] == '0')
-				first_fill_ground(img,  (img->player_pos.map2d_x + 1) * 50, (img->player_pos.map2d_y + 1) * 50);
-			else if (img->map2d[img->player_pos.map2d_x][img->player_pos.map2d_y] == 'P')
-				player_fill(img, (img->player_pos.map2d_x + 1) * 50,  (img->player_pos.map2d_y + 1) * 50);
+			if (img->map2d[img->player_pos.map2d_y][img->player_pos.map2d_x] == '1')
+				fill_wall(img,(img->player_pos.map2d_y + 1) * 50,  (img->player_pos.map2d_x + 1) * 50);
+			else if (img->map2d[img->player_pos.map2d_y][img->player_pos.map2d_x] == '0')
+				first_fill_ground(img,  (img->player_pos.map2d_y + 1) * 50, (img->player_pos.map2d_x + 1) * 50);
+			else if (img->map2d[img->player_pos.map2d_y][img->player_pos.map2d_x] == 'P')
+				player_fill(img, (img->player_pos.map2d_y + 1) * 50,  (img->player_pos.map2d_x + 1) * 50);
 			img->player_pos.map2d_y++;
 		}
-		img->player_pos.map2d_x++;
+		img->player_pos.map2d_y++;
 	}
 	img->player_pos.x_line_end = img->player_pos.player_x + 30;
 	img->player_pos.y_line_end = img->player_pos.player_y + 30;
@@ -41,19 +41,19 @@ int	first_rander_map2d(t_var *img)
 
 int	rander_map2d(t_var *img)
 {
-	img->player_pos.map2d_x = 0;
-	while (img->map2d[img->player_pos.map2d_x])
+	img->player_pos.map2d_y = 0;
+	while (img->map2d[img->player_pos.map2d_y])
 	{
-		img->player_pos.map2d_y = 0;
-		while (img->map2d[img->player_pos.map2d_x][img->player_pos.map2d_y ])
+		img->player_pos.map2d_x = 0;
+		while (img->map2d[img->player_pos.map2d_y][img->player_pos.map2d_x ])
 		{
-			if (img->map2d[img->player_pos.map2d_x][img->player_pos.map2d_y ] == '1')
-				fill_wall(img,(img->player_pos.map2d_x + 1) * 50,  (img->player_pos.map2d_y  + 1) * 50);
-			else if (img->map2d[img->player_pos.map2d_x][img->player_pos.map2d_y ] != '1')
-				fill_ground(img,  (img->player_pos.map2d_x + 1) * 50, (img->player_pos.map2d_y + 1) * 50);
-			img->player_pos.map2d_y++;
+			if (img->map2d[img->player_pos.map2d_y][img->player_pos.map2d_x ] == '1')
+				fill_wall(img,(img->player_pos.map2d_y + 1) * 50,  (img->player_pos.map2d_x  + 1) * 50);
+			else if (img->map2d[img->player_pos.map2d_y][img->player_pos.map2d_x ] != '1')
+				fill_ground(img,  (img->player_pos.map2d_y + 1) * 50, (img->player_pos.map2d_x + 1) * 50);
+			img->player_pos.map2d_x++;
 		}
-		img->player_pos.map2d_x++;
+		img->player_pos.map2d_y++;
 	}
 	horizotal_ray(img);
 	// virtical_ray(img);
