@@ -6,7 +6,7 @@
 /*   By: zael-wad <zael-wad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/31 14:18:59 by zael-wad          #+#    #+#             */
-/*   Updated: 2023/08/06 17:29:57 by zael-wad         ###   ########.fr       */
+/*   Updated: 2023/08/09 13:26:40 by zael-wad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,8 @@
 # include <stdlib.h>
 # include <unistd.h>
 
-# define ROTATE_ANGLE 0.174533
+# define ROTATE_ANGLE 0.0872665
+# define PLAYER_ANGLE 4.71239
 
 # define BLACK 0x00000000
 # define WHITE 0x00FFFFFF
@@ -34,10 +35,12 @@
 # define PI 3.14159265359
 # define PLAYER_SPEED 3
 # define LINE_LENTH 30
-#define GRIDE_SIZE 50
+# define GRIDE_SIZE 50
 
 typedef struct t_player
 {
+	double		ray_angle;
+	double		line_lenth;
 	double		save_y_inc;
 	double		save_x_inc;
 	double		player_speed;
@@ -47,6 +50,10 @@ typedef struct t_player
 	double		player_y;
 	int			map2d_x;
 	int			map2d_y;
+	double		x_horizontal_line_end;
+	double		y_horizontal_line_end;
+	double		x_virtical_line_end;
+	double		y_virtical_line_end;
 	double		x_line_end;
 	double		y_line_end;
 	double		angle_in_radian;
@@ -85,9 +92,9 @@ char			**ftt_split(t_var *data, int fd);
 char			*join_utils(char *s1);
 // mao2d
 
-void			fill_wall(t_var *img, int x, int y);
-void			fill_ground(t_var *img, int x, int y);
-void			player_fill(t_var *img, int x, int y);
+void			fill_wall(t_var *img, int y, int x);
+void			fill_ground(t_var *img, int y, int x);
+void			player_fill(t_var *img, int y, int x);
 
 void			my_mlx_pixel_put(t_var *data, int x, int y, int color);
 void			update_player_pos(t_var *img, int x, int y, int key);
@@ -107,11 +114,18 @@ void			rotate_right(t_var *data);
 
 // draw line
 void			draw_line(t_var *data);
+// void			draw_line2(t_var *data);
+void			player_direction(t_var *data);
 void			first_draw_line(t_var *data);
 void			horizotal_ray(t_var *data);
-void	virtical_ray(t_var *data);
+void			virtical_ray(t_var *data);
 
 // rander map2d
 int				first_rander_map2d(t_var *img);
 int				rander_map2d(t_var *img);
+void			clac_player_distence(t_var *data);
+
+
+//files of  view
+void	player_view_filed(t_var *data);
 #endif
