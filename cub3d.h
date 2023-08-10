@@ -6,7 +6,7 @@
 /*   By: zael-wad <zael-wad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/31 14:18:59 by zael-wad          #+#    #+#             */
-/*   Updated: 2023/08/09 13:26:40 by zael-wad         ###   ########.fr       */
+/*   Updated: 2023/08/10 18:45:37 by zael-wad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@
 # include <stdlib.h>
 # include <unistd.h>
 
-# define ROTATE_ANGLE 0.0872665
+# define ROTATE_ANGLE 0.174533
 # define PLAYER_ANGLE 4.71239
 
 # define BLACK 0x00000000
@@ -128,4 +128,7 @@ void			clac_player_distence(t_var *data);
 
 //files of  view
 void	player_view_filed(t_var *data);
+
+double	convert_dgree(int degree);
+
 #endif

@@ -6,7 +6,7 @@
 /*   By: zael-wad <zael-wad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/31 14:18:38 by zael-wad          #+#    #+#             */
-/*   Updated: 2023/08/09 13:48:45 by zael-wad         ###   ########.fr       */
+/*   Updated: 2023/08/10 18:51:02 by zael-wad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,7 +81,7 @@ void	first_draw_line(t_var *data)
 	{
 		if (data->map2d[(int)data->player_pos.line_y_start / 50][(int)data->player_pos.line_x_start / 50] != '1')
 		{
-				my_mlx_pixel_put(data, (int)data->player_pos.line_x_start, (int)data->player_pos.line_y_start, 0x00000000);
+				my_mlx_pixel_put(data, (int)data->player_pos.line_x_start, (int)data->player_pos.line_y_start, BLACK);
 				// data->player_pos.line_x_start = data->player_pos.player_x; 
 				// data->player_pos.line_y_start = data->player_pos.player_y;
 			data->player_pos.line_x_start += x_inc;
@@ -107,14 +107,14 @@ void	draw_line(t_var *data)
 	
 	i = 0;
 
-	virtical_ray(data);
-	horizotal_ray(data);
-	clac_player_distence(data);
 	// data->player_pos.angle_in_radian = PI;
     // data->player_pos.save_x_inc = cos(data->player_pos.angle_in_radian) * LINE_LENTH;
     // data->player_pos.save_y_inc = sin(data->player_pos.angle_in_radian) * LINE_LENTH;
 	// data->player_pos.x_line_end = data->player_pos.save_x_inc + data->player_pos.line_x_start;
 	// data->player_pos.y_line_end = data->player_pos.save_y_inc + data->player_pos.line_y_start;
+	virtical_ray(data);
+	horizotal_ray(data);
+	clac_player_distence(data);
 	data->player_pos.line_x_start = data->player_pos.player_x; 
 	data->player_pos.line_y_start = data->player_pos.player_y;
 	dx = data->player_pos.x_line_end - data->player_pos.line_x_start;
@@ -140,18 +140,10 @@ void	draw_line(t_var *data)
 	
 	while (i <= step)
 	{
-		// if (data->player_pos.x_line_end > 0 && data->player_pos.y_line_end > 0)
-		{
-			// if (data->map2d[(int)data->player_pos.line_y_start / 50][(int)data->player_pos.line_x_start / 50] != '1')
-			{
-					my_mlx_pixel_put(data, (int)data->player_pos.line_x_start, (int)data->player_pos.line_y_start,RED);
-				data->player_pos.line_x_start += x_inc;
-				data->player_pos.line_y_start += y_inc;
-			}
-			
-			i++;
-		}
-		
+		my_mlx_pixel_put(data, (int)data->player_pos.line_x_start, (int)data->player_pos.line_y_start,RED);
+		data->player_pos.line_x_start += x_inc;
+		data->player_pos.line_y_start += y_inc;
+		i++;
 	}
 }
 
@@ -169,6 +161,7 @@ void	player_direction(t_var *data)
 	double	y_nearest;
 	int i;
 	
+	
 	i = 0;
     data->player_pos.save_x_inc = cos(data->player_pos.angle_in_radian) * LINE_LENTH;
     data->player_pos.save_y_inc = sin(data->player_pos.angle_in_radian) * LINE_LENTH;
@@ -178,8 +171,7 @@ void	player_direction(t_var *data)
 	data->player_pos.line_y_start = data->player_pos.player_y;
 	dx = x_nearest - data->player_pos.line_x_start;
 	dy = y_nearest - data->player_pos.line_y_start;
-	// printf("dy=%d\n",(int)dy);
-	// printf("dx=%d\n",(int)dx);
+
 	// y_nearest = data->player_pos.player_y - ((data->tmp_player_y / 50) * 50);
 	// x_nearest = y_nearest / tan(data->player_pos.angle_in_radian);
 
@@ -213,13 +205,31 @@ void	player_direction(t_var *data)
 
 void	player_view_filed(t_var *data)
 {
-	data->player_pos.ray_angle = data->player_pos.angle_in_radian - 0.523599;
-	while (data->player_pos.ray_angle <= data->player_pos.angle_in_radian + 0.523599)
+	double tmp;
+	double start;
+	double end;
+
+
+	int i;
+	i = 0;
+	data->player_pos.ray_angle = data->player_pos.angle_in_radian;
+	while (i < x_width(data->map2d) / 2)
 	{
-		draw_line(data);
-		data->player_pos.ray_angle += 0.00327249235;
+		data->player_pos.ray_angle -= 0.00097869158;
+		if (data->player_pos.ray_angle < 0)
+			data->player_pos.ray_angle = 2 * PI;
+		i++;
 	}
-		// player_direction(data);
+	i = 0;
+	while (i < x_width(data->map2d))
+	{
+		if (data->player_pos.ray_angle > 2 * PI)
+			data->player_pos.ray_angle = 0;
+		data->player_pos.ray_angle += 0.00097869158;
+		draw_line(data);
+		i++;
+	}
+	player_direction(data);
 }
 
 
@@ -234,26 +244,30 @@ void	horizotal_ray(t_var *data)
 	double old_xs;
 	double old_ys;
 
-	if(sin(data->player_pos.ray_angle) == 0 || cos(data->player_pos.ray_angle) == 0)
-		return;
-	if (data->player_pos.ray_angle >= 0 && data->player_pos.ray_angle <= 3.14159)
+	// data->player_pos.x_horizontal_line_end = INT_MAX - 1;
+	// data->player_pos.y_horizontal_line_end = INT_MAX - 1;
+	//if(sin(data->player_pos.ray_angle) == 0 || cos(data->player_pos.ray_angle) == 0)
+		// return;
+
+	if (data->player_pos.ray_angle > 0 && data->player_pos.ray_angle <=  convert_dgree(180))
 		alpha_y = (floor((int)data->player_pos.player_y / GRIDE_SIZE) * 50) + 50;
 	else
 		alpha_y = (floor((int)data->player_pos.player_y / GRIDE_SIZE) * 50) - 1;
 	
 	alpha_x =  (data->player_pos.player_y - alpha_y) / tan(data->player_pos.ray_angle);
 
-	if (data->player_pos.ray_angle >= 1.5708 && data->player_pos.ray_angle <= 4.71239)
+	if (data->player_pos.ray_angle >=  convert_dgree(90) && data->player_pos.ray_angle <= convert_dgree(270))
 		alpha_x = data->player_pos.player_x - fabs(alpha_x);
 	else 
 		alpha_x = data->player_pos.player_x + fabs(alpha_x);
 	
-	if (data->player_pos.ray_angle >= 0 && data->player_pos.ray_angle <= 3.14159)
+	if (data->player_pos.ray_angle >= 0 && data->player_pos.ray_angle <= convert_dgree(180))
 		ys = GRIDE_SIZE;	
 	else
 		ys = -GRIDE_SIZE;
                                                      
 	xs = ys / tan(data->player_pos.ray_angle);
+		
 	if (alpha_x < 0 || alpha_y < 0 || alpha_x > x_width(data->map2d) || alpha_y > y_height(data->map2d))
 	{
 		data->player_pos.x_horizontal_line_end = INT_MAX - 1;
@@ -271,11 +285,6 @@ void	horizotal_ray(t_var *data)
 		old_ys = alpha_y + ys;
 		while(1)
 		{
-			// printf("===%d=xs\n",(int)alpha_x);
-			// printf("===%d=ys\n",(int)alpha_y);
-			// if (old_xs  < 0 || old_ys < 0 ||old_xs > x_width(data->map2d) || old_ys  > y_height(data->map2d))
-			// 	return ;
-			// printf("test%zu\n",i++);
 			if (old_xs < 0)
 				old_xs = GRIDE_SIZE;
 			if (old_ys < 0)
@@ -304,88 +313,6 @@ void	horizotal_ray(t_var *data)
 	}
 }
 
-// void	horizotal_ray(t_var *data)
-// {
-// 	double alpha_y;
-// 	double alpha_x;
-// 	double dy;
-// 	double dx;
-// 	double ys;
-// 	double xs;
-// 	double old_xs;
-// 	double old_ys;
-
-// 	if(sin(data->player_pos.angle_in_radian) == 0 || cos(data->player_pos.angle_in_radian) == 0)
-// 		return;
-// 	if (data->player_pos.angle_in_radian >= 0 && data->player_pos.angle_in_radian <= 3.14159)
-// 		alpha_y = (floor((int)data->player_pos.player_y / GRIDE_SIZE) * 50) + 50;
-// 	else
-// 		alpha_y = (floor((int)data->player_pos.player_y / GRIDE_SIZE) * 50) - 1;
-	
-// 	alpha_x =  (data->player_pos.player_y - alpha_y) / tan(data->player_pos.angle_in_radian);
-
-// 	if (data->player_pos.angle_in_radian >= 1.5708 && data->player_pos.angle_in_radian <= 4.71239)
-// 		alpha_x = data->player_pos.player_x - fabs(alpha_x);
-// 	else 
-// 		alpha_x = data->player_pos.player_x + fabs(alpha_x);
-	
-// 	if (data->player_pos.angle_in_radian >= 0 && data->player_pos.angle_in_radian <= 3.14159)
-// 		ys = GRIDE_SIZE;	
-// 	else
-// 		ys = -GRIDE_SIZE;
-                                                     
-// 	xs = ys / tan(data->player_pos.angle_in_radian);
-// 	if (alpha_x < 0 || alpha_y < 0 || alpha_x > x_width(data->map2d) || alpha_y > y_height(data->map2d))
-// 	{
-// 		data->player_pos.x_horizontal_line_end = INT_MAX - 1;
-// 		data->player_pos.y_horizontal_line_end = INT_MAX - 1;
-// 		return;
-// 	}
-// 	if (data->map2d[(int)alpha_y / GRIDE_SIZE][(int)alpha_x /GRIDE_SIZE] == '1')
-// 	{
-// 		data->player_pos.x_horizontal_line_end = alpha_x;
-// 		data->player_pos.y_horizontal_line_end = alpha_y;
-// 	}
-// 	else
-// 	{
-// 		old_xs = xs + alpha_x;
-// 		old_ys = alpha_y + ys;
-// 		while(1)
-// 		{
-// 			// printf("===%d=xs\n",(int)alpha_x);
-// 			// printf("===%d=ys\n",(int)alpha_y);
-// 			// if (old_xs  < 0 || old_ys < 0 ||old_xs > x_width(data->map2d) || old_ys  > y_height(data->map2d))
-// 			// 	return ;
-// 			// printf("test%zu\n",i++);
-// 			if (old_xs < 0)
-// 				old_xs = GRIDE_SIZE;
-// 			if (old_ys < 0)
-// 				old_ys = GRIDE_SIZE;
-// 			if (old_xs > 0 && old_ys > 0 && old_xs < x_width(data->map2d) && old_ys < y_height(data->map2d))
-// 			{
-// 				if (data->map2d[(int)old_ys  / 50][(int)old_xs  / 50] != '1')
-// 				{
-// 					old_xs += xs;
-// 					old_ys += ys;
-// 				}
-// 				else if (data->map2d[(int)old_ys  / 50][(int)old_xs  / 50] == '1')
-// 				{
-// 					data->player_pos.x_horizontal_line_end = old_xs;
-// 					data->player_pos.y_horizontal_line_end = old_ys;
-// 					break;
-// 				}
-// 			}
-// 			else
-// 			{
-// 				data->player_pos.x_horizontal_line_end = INT_MAX - 1;
-// 				data->player_pos.y_horizontal_line_end = INT_MAX - 1;
-// 				return;
-// 			}
-// 		}
-// 	}
-// }
-
-
 void	virtical_ray(t_var *data)
 {
 	double alpha_y;
@@ -397,30 +324,32 @@ void	virtical_ray(t_var *data)
 	double old_xs;
 	double old_ys;
 	
-	if(sin(data->player_pos.ray_angle) == 0 || cos(data->player_pos.ray_angle) == 0)
-		return;
-	if (data->player_pos.ray_angle >= 1.5708 && data->player_pos.ray_angle <= 4.71239)
+	// data->player_pos.x_virtical_line_end = INT_MAX ;
+	// data->player_pos.y_virtical_line_end = INT_MAX ;
+	//if(sin(data->player_pos.ray_angle) == 0 || cos(data->player_pos.ray_angle) == 0)
+		//return;
+	if (data->player_pos.ray_angle >= convert_dgree(90) && data->player_pos.ray_angle <= convert_dgree(270))
 		alpha_x = (floor((int)data->player_pos.player_x / GRIDE_SIZE) * 50) - 1;
 	else
 		alpha_x = (floor((int)data->player_pos.player_x / GRIDE_SIZE) * 50) + 50;
 
 	alpha_y =  (alpha_x - data->player_pos.player_x) * tan(data->player_pos.ray_angle);
 
-	if (data->player_pos.ray_angle >= 0 && data->player_pos.ray_angle <= 3.14159)
+	if (data->player_pos.ray_angle >= 0 && data->player_pos.ray_angle <= convert_dgree(180))
 		alpha_y = data->player_pos.player_y + fabs(alpha_y);
 	else 
 		alpha_y = data->player_pos.player_y - fabs(alpha_y);
 	
-	if (data->player_pos.ray_angle >= 1.5708 && data->player_pos.ray_angle <= 4.71239)
+	if (data->player_pos.ray_angle >= convert_dgree(90) && data->player_pos.ray_angle <=  convert_dgree(270))
 		xs = -GRIDE_SIZE;
 	else
 		xs = GRIDE_SIZE;
-	
+		
 	ys = xs * tan(data->player_pos.ray_angle);
 	if (alpha_x < 0 || alpha_y < 0 || alpha_x > x_width(data->map2d) || alpha_y > y_height(data->map2d))
 	{
-		data->player_pos.x_virtical_line_end = INT_MAX - 1;
-		data->player_pos.y_virtical_line_end = INT_MAX - 1;
+		data->player_pos.x_virtical_line_end = INT_MAX ;
+		data->player_pos.y_virtical_line_end = INT_MAX ;
 		return;
 	}
 	if (data->map2d[(int)alpha_y / GRIDE_SIZE][(int)alpha_x /GRIDE_SIZE] == '1')
@@ -454,89 +383,13 @@ void	virtical_ray(t_var *data)
 			}
 			else
 			{
-				data->player_pos.x_virtical_line_end = INT_MAX - 1;
-				data->player_pos.y_virtical_line_end = INT_MAX - 1;
+				data->player_pos.x_virtical_line_end = INT_MAX;
+				data->player_pos.y_virtical_line_end = INT_MAX;
 				return;
 			}
 		}
 	}
 }
-
-// void	virtical_ray(t_var *data)
-// {
-// 	double alpha_y;
-// 	double alpha_x;
-// 	double dy;
-// 	double dx;
-// 	double ys;
-// 	double xs;
-// 	double old_xs;
-// 	double old_ys;
-	
-// 	if(sin(data->player_pos.angle_in_radian) == 0 || cos(data->player_pos.angle_in_radian) == 0)
-// 		return;
-// 	if (data->player_pos.angle_in_radian >= 1.5708 && data->player_pos.angle_in_radian <= 4.71239)
-// 		alpha_x = (floor((int)data->player_pos.player_x / GRIDE_SIZE) * 50) - 1;
-// 	else
-// 		alpha_x = (floor((int)data->player_pos.player_x / GRIDE_SIZE) * 50) + 50;
-
-// 	alpha_y =  (alpha_x - data->player_pos.player_x) * tan(data->player_pos.angle_in_radian);
-
-// 	if (data->player_pos.angle_in_radian >= 0 && data->player_pos.angle_in_radian <= 3.14159)
-// 		alpha_y = data->player_pos.player_y + fabs(alpha_y);
-// 	else 
-// 		alpha_y = data->player_pos.player_y - fabs(alpha_y);
-	
-// 	if (data->player_pos.angle_in_radian >= 1.5708 && data->player_pos.angle_in_radian <= 4.71239)
-// 		xs = -GRIDE_SIZE;
-// 	else
-// 		xs = GRIDE_SIZE;
-	
-// 	ys = xs * tan(data->player_pos.angle_in_radian);
-// 	if (alpha_x < 0 || alpha_y < 0 || alpha_x > x_width(data->map2d) || alpha_y > y_height(data->map2d))
-// 	{
-// 		data->player_pos.x_virtical_line_end = INT_MAX - 1;
-// 		data->player_pos.y_virtical_line_end = INT_MAX - 1;
-// 		return;
-// 	}
-// 	if (data->map2d[(int)alpha_y / GRIDE_SIZE][(int)alpha_x /GRIDE_SIZE] == '1')
-// 	{
-// 		data->player_pos.x_virtical_line_end = alpha_x;
-// 		data->player_pos.y_virtical_line_end = alpha_y;
-// 	}
-// 	else
-// 	{
-// 		old_xs = xs + alpha_x;
-// 		old_ys = alpha_y + ys;
-// 		while (1)
-// 		{
-// 			if (old_xs < 0)
-// 				old_xs = xs;
-// 			if (old_ys < 0)
-// 				old_ys = ys;
-// 			if (old_xs > 0 && old_ys > 0 && old_xs < x_width(data->map2d) && old_ys < y_height(data->map2d))
-// 			{
-// 				if (data->map2d[(int)old_ys / 50][(int)old_xs  / 50] != '1')
-// 				{
-// 					old_xs += xs;
-// 					old_ys += ys;
-// 				}
-// 				else if (data->map2d[(int)old_ys  / 50][(int)old_xs / 50] == '1')
-// 				{
-// 					data->player_pos.x_virtical_line_end = old_xs;
-// 					data->player_pos.y_virtical_line_end = old_ys;
-// 					break;
-// 				}
-// 			}
-// 			else
-// 			{
-// 				data->player_pos.x_virtical_line_end = INT_MAX - 1;
-// 				data->player_pos.y_virtical_line_end = INT_MAX - 1;
-// 				return;
-// 			}
-// 		}
-// 	}
-// }
 
 int move_player(int i, t_var *data)
 {
@@ -565,12 +418,33 @@ int move_player(int i, t_var *data)
 		data->player_pos.player_x  =  data->tmp_player_x;
 		data->player_pos.x_line_end = data->player_pos.player_x + data->player_pos.save_x_inc;
 		data->player_pos.y_line_end = data->player_pos.player_y + data->player_pos.save_y_inc;
-
 		rander_map2d(data);
 	}
 	return (1);
 }
 
+double	convert_dgree(int degree)
+{
+	return (degree * (PI / 180));
+}
+
+void	initlize_varibles(t_var *data)
+{
+	data->player_pos.player_x = 0;
+	data->player_pos.player_y = 0;
+	data->player_pos.player_speed = 3;
+	data->player_pos.angle_in_radian = 0.1;
+	data->player_pos.x_virtical_line_end = 0;
+	data->player_pos.y_virtical_line_end = 0;
+	data->player_pos.x_horizontal_line_end = 0;
+	data->player_pos.y_horizontal_line_end = 0;
+	data->player_pos.ray_angle = 0;
+	data->player_pos.line_lenth = 0;
+	data->store_cos = 0;
+	data->store_sin = 0;
+	data->player_pos.angle_in_radian = 0;
+
+}
 int main(int ac , char **av)
 {
 	int fd;
@@ -585,23 +459,7 @@ int main(int ac , char **av)
 	printf("%d=y\n",y_height(img.map2d));
 	img.img = mlx_new_image(img.mlx, x_width(img.map2d),  y_height(img.map2d));
 	img.addr = mlx_get_data_addr(img.img, &img.bits_per_pixel, &img.line_length, &img.endian);	
-	img.player_pos.player_x = 0;
-	img.player_pos.player_y = 0;
-	img.player_pos.player_speed = 3;
-	// img.player_pos.angle_in_radian = 0.1;
-	img.player_pos.x_virtical_line_end = 0;
-	img.player_pos.y_virtical_line_end = 0;
-	img.player_pos.x_horizontal_line_end = 0;
-	img.player_pos.y_horizontal_line_end = 0;
-	img.player_pos.ray_angle = 0;
-	img.player_pos.line_lenth = 0;
-	img.store_cos = 0;
-	img.store_sin = 0;
-	img.player_pos.angle_in_radian = PLAYER_ANGLE;
-
-	// img.player_pos.x_line_end = img.player_pos.player_x + cos(img.player_pos.angle_in_radian) * 30;
-	// img.player_pos.y_line_end = img.player_pos.player_y + sin(img.player_pos.angle_in_radian) * 30;
-
+	initlize_varibles(&img);
 	first_rander_map2d(&img);
 	mlx_hook(img.mlx_win, 2, 1L<<1, move_player, &img);
 	// mlx_key_hook(mlx_ptr.win, key_press, &mlx_ptr);

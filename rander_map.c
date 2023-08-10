@@ -6,7 +6,7 @@
 /*   By: zael-wad <zael-wad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/04 22:45:34 by zael-wad          #+#    #+#             */
-/*   Updated: 2023/08/09 13:40:57 by zael-wad         ###   ########.fr       */
+/*   Updated: 2023/08/09 20:44:13 by zael-wad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,9 +30,7 @@ int	first_rander_map2d(t_var *img)
 		}
 		img->player_pos.map2d_y++;
 	}
-	// img->player_pos.x_line_end = img->player_pos.player_x;
-	// img->player_pos.y_line_end = img->player_pos.player_y - 30;
-	// first_draw_line(img);
+	player_view_filed(img);
 	player_direction(img);
 	my_mlx_pixel_put(img, img->player_pos.player_x, img->player_pos.player_y, 0x00000000);
 	mlx_put_image_to_window(img->mlx, img->mlx_win, img->img, 0, 0);
@@ -49,32 +47,20 @@ void	clac_player_distence(t_var *data)
 	double tmp2 = pow( (fabs(data->player_pos.player_x - data->player_pos.x_virtical_line_end)) ,2);
 	double tmp4 = pow( (fabs(data->player_pos.player_y - data->player_pos.y_virtical_line_end)) ,2);
 	
-	// printf("player_distance==%d\n",(int)pd);
 	pd = sqrt(tmp + tmp3);
 	pe = sqrt(tmp2 + tmp4);
 	if (pe < pd)
 	{
 		data->player_pos.x_line_end = data->player_pos.x_virtical_line_end;
 		data->player_pos.y_line_end = data->player_pos.y_virtical_line_end;
-		// data->player_pos.save_x_inc = cos(data->player_pos.angle_in_radian) * pe;
-    	// data->player_pos.save_y_inc = sin(data->player_pos.angle_in_radian) * pe;
-		// data->player_pos.line_lenth = pe;
 	}
 	else
 	{
 		data->player_pos.x_line_end = data->player_pos.x_horizontal_line_end;
 		data->player_pos.y_line_end = data->player_pos.y_horizontal_line_end;
-	// // 	// data->player_pos.save_x_inc = cos(data->player_pos.angle_in_radian) * pd;
-    // // 	// data->player_pos.save_y_inc = sin(data->player_pos.angle_in_radian) * pd;
-	// // 	// data->player_pos.line_lenth = pd;
-	// // 	// data->player_pos.save_x_inc = cos(data->player_pos.angle_in_radian) * pd;
-	// // 	// data->player_pos.save_y_inc = sin(data->player_pos.angle_in_radian) * pd;
-	// // 	// data->player_pos.x_line_end = data->player_pos.player_x + data->player_pos.save_x_inc;
-	// // 	// data->player_pos.y_line_end = data->player_pos.player_y + data->player_pos.save_y_inc;
 	}
-	// printf("pd=%d\n",(int)pd);
-	// printf("pe=%d\n",(int)pe);
 }
+
 int	rander_map2d(t_var *img)
 {
 	img->player_pos.map2d_y = 0;
