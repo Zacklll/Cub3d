@@ -6,14 +6,43 @@
 /*   By: zael-wad <zael-wad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/04 22:45:34 by zael-wad          #+#    #+#             */
-/*   Updated: 2023/08/09 20:44:13 by zael-wad         ###   ########.fr       */
+/*   Updated: 2023/08/11 11:32:47 by zael-wad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub3d.h"
 
 int	first_rander_map2d(t_var *img)
-{
+{ 
+
+	
+	
+	// img->player_pos.map2d_y = 0;
+	// while (img->map2d[img->player_pos.map2d_y])
+	// {
+    //     img->player_pos.map2d_x = 0;
+	// 	while (img->map2d[img->player_pos.map2d_y][img->player_pos.map2d_x])
+	// 	{
+	// 		if (img->map2d[img->player_pos.map2d_y][img->player_pos.map2d_x] == '1')
+	// 		{
+				
+	// 		}
+	// 		else if (img->map2d[img->player_pos.map2d_y][img->player_pos.map2d_x] == '0')
+	// 		{
+	// 			pixel_data[offset] = 132;     // Red channel
+	// 			pixel_data[offset + 1] = 123;   // Green channel
+	// 			pixel_data[offset + 2] = 123; 
+	// 		}
+	// 		else if (img->map2d[img->player_pos.map2d_y][img->player_pos.map2d_x] == 'P')
+	// 		{
+	// 			pixel_data[offset] = 132;     // Red channel
+	// 			pixel_data[offset + 1] = 123;   // Green channel
+	// 			pixel_data[offset + 2] = 123; 
+	// 		}
+   	// 		img->player_pos.map2d_x++;
+	// 	}
+	// 	img->player_pos.map2d_y++;
+	// }
 	img->player_pos.map2d_y = 0;
 	while (img->map2d[img->player_pos.map2d_y])
 	{
@@ -30,8 +59,8 @@ int	first_rander_map2d(t_var *img)
 		}
 		img->player_pos.map2d_y++;
 	}
-	player_view_filed(img);
-	player_direction(img);
+	// player_view_filed(img);
+	// player_direction(img);
 	my_mlx_pixel_put(img, img->player_pos.player_x, img->player_pos.player_y, 0x00000000);
 	mlx_put_image_to_window(img->mlx, img->mlx_win, img->img, 0, 0);
 	return (0);
@@ -67,7 +96,7 @@ int	rander_map2d(t_var *img)
 	while (img->map2d[img->player_pos.map2d_y])
 	{
 		img->player_pos.map2d_x = 0;
-		while (img->map2d[img->player_pos.map2d_y][img->player_pos.map2d_x ])
+		while (img->map2d[img->player_pos.map2d_y][img->player_pos.map2d_x])
 		{
 			if (img->map2d[img->player_pos.map2d_y][img->player_pos.map2d_x ] == '1')
 				fill_wall(img,(img->player_pos.map2d_y + 1) * 50,  (img->player_pos.map2d_x  + 1) * 50);
@@ -78,9 +107,9 @@ int	rander_map2d(t_var *img)
 		img->player_pos.map2d_y++;
 	}
 	
-	player_view_filed(img);
+	// player_view_filed(img);
 	// printf("test\n");
-	my_mlx_pixel_put(img, img->player_pos.player_x, img->player_pos.player_y,0x00000000);
+	my_mlx_pixel_put(img, img->player_pos.player_x, img->player_pos.player_y, BLACK);
 	mlx_put_image_to_window(img->mlx, img->mlx_win, img->img, 0, 0);
 	return (0);
 }

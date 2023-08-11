@@ -6,7 +6,7 @@
 /*   By: zael-wad <zael-wad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/31 14:18:59 by zael-wad          #+#    #+#             */
-/*   Updated: 2023/08/10 18:45:37 by zael-wad         ###   ########.fr       */
+/*   Updated: 2023/08/10 19:32:00 by zael-wad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@
 # define DARK_TURQUOISE 0x0000CED1
 # define BLUE 0x000000FF
 # define PI 3.14159265359
-# define PLAYER_SPEED 3
+# define PLAYER_SPEED 15
 # define LINE_LENTH 30
 # define GRIDE_SIZE 50
 
@@ -130,5 +130,11 @@ void			clac_player_distence(t_var *data);
 void	player_view_filed(t_var *data);
 
 double	convert_dgree(int degree);
+
+
+
+//filed of view ray cast
+void	horizotal_ray(t_var *data);
+void	virtical_ray(t_var *data);
 
 #endif

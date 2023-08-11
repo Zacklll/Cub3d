@@ -6,7 +6,7 @@
 #    By: zael-wad <zael-wad@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/07/31 14:19:07 by zael-wad          #+#    #+#              #
-#    Updated: 2023/08/04 22:47:00 by zael-wad         ###   ########.fr        #
+#    Updated: 2023/08/11 11:06:45 by zael-wad         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -19,6 +19,8 @@ SRCS = main.c ft_split.c \
 		player_movmentes.c\
 		rotation.c\
 		rander_map.c\
+		virtical_ray.c\
+		horizontal_ray.c\
 
 OBJ = $(SRCS:.c=.o)
 NAME = cub3d
