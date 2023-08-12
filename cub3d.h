@@ -6,7 +6,7 @@
 /*   By: zael-wad <zael-wad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/31 14:18:59 by zael-wad          #+#    #+#             */
-/*   Updated: 2023/08/10 19:32:00 by zael-wad         ###   ########.fr       */
+/*   Updated: 2023/08/12 20:53:24 by zael-wad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,8 @@
 # define PLAYER_ANGLE 4.71239
 
 # define BLACK 0x00000000
+# define SKY 0x000080FF
+# define GROUND 0x00A0A0A0
 # define WHITE 0x00FFFFFF
 # define RED 0x00FF0000
 # define CYAN 0x0000FFFF
@@ -39,6 +41,11 @@
 
 typedef struct t_player
 {
+	double 	distance;
+	double		pd;
+	double		pe;
+	double		old_x;
+	double		old_y;
 	double		ray_angle;
 	double		line_lenth;
 	double		save_y_inc;
@@ -63,6 +70,7 @@ typedef struct t_var
 {
 	// int             x_width;
 	// int             y_height;
+	double		distance_to_projection_plane;
 	double		tmp_player_x;
 	double		tmp_player_y;
 	double		store_cos;
@@ -113,7 +121,7 @@ void			rotate_left(t_var *data);
 void			rotate_right(t_var *data);
 
 // draw line
-void			draw_line(t_var *data);
+void			draw_line(t_var *data, int x_pos);
 // void			draw_line2(t_var *data);
 void			player_direction(t_var *data);
 void			first_draw_line(t_var *data);

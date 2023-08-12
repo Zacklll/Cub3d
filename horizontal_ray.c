@@ -6,7 +6,7 @@
 /*   By: zael-wad <zael-wad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/10 18:53:23 by zael-wad          #+#    #+#             */
-/*   Updated: 2023/08/10 18:53:45 by zael-wad         ###   ########.fr       */
+/*   Updated: 2023/08/12 20:56:53 by zael-wad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ void	horizotal_ray(t_var *data)
 	if (data->player_pos.ray_angle > 0 && data->player_pos.ray_angle <=  convert_dgree(180))
 		alpha_y = (floor((int)data->player_pos.player_y / GRIDE_SIZE) * 50) + 50;
 	else
-		alpha_y = (floor((int)data->player_pos.player_y / GRIDE_SIZE) * 50) - 1;
+		alpha_y = (floor((int)data->player_pos.player_y / GRIDE_SIZE) * 50) -0.00005;
 	
 	alpha_x =  (data->player_pos.player_y - alpha_y) / tan(data->player_pos.ray_angle);
 

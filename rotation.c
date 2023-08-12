@@ -6,7 +6,7 @@
 /*   By: zael-wad <zael-wad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/04 21:19:16 by zael-wad          #+#    #+#             */
-/*   Updated: 2023/08/10 15:33:36 by zael-wad         ###   ########.fr       */
+/*   Updated: 2023/08/11 13:17:58 by zael-wad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ void    rotate_right(t_var *data)
     // else if (data->player_pos.angle_in_radian < 0)
     //     data->player_pos.angle_in_radian += 6.28319;
     // else 
-    // printf("p%d\n",data->player_pos.angle_in_radian);
+    // printf("p%d\n",(int)data->player_pos.angle_in_radian);
     data->player_pos.angle_in_radian += ROTATE_ANGLE;
     if (data->player_pos.angle_in_radian > 2 * PI)
         data->player_pos.angle_in_radian = 0.0;

@@ -6,7 +6,7 @@
 /*   By: zael-wad <zael-wad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/01 18:24:26 by zael-wad          #+#    #+#             */
-/*   Updated: 2023/08/11 11:31:31 by zael-wad         ###   ########.fr       */
+/*   Updated: 2023/08/11 20:30:34 by zael-wad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,15 +24,17 @@ void	player_fill(t_var *img, int y, int x)
 		j = x - 50;
 		while (j < x)
 		{
-			if (j % 50 == 0 || i % 50 == 0)
-				my_mlx_pixel_put(img, j , i ,WHITE);
+			// if (j % 50 == 0 || i % 50 == 0)
+			// 	my_mlx_pixel_put(img, j , i ,WHITE);
 			if (i == (y - 25) && j == (x - 25))
             {
+				printf("%d\n",(int)img->player_pos.player_x );
+				printf("%d\n",(int)img->player_pos.player_y );
                 img->player_pos.player_x = j;
                 img->player_pos.player_y = i;
             }
-			else
-				my_mlx_pixel_put(img, j , i , DARK_TURQUOISE);
+			// else
+			// 	my_mlx_pixel_put(img, j , i , DARK_TURQUOISE);
 			j++;
 		}
 		i++;

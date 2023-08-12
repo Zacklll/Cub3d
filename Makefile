@@ -6,12 +6,12 @@
 #    By: zael-wad <zael-wad@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/07/31 14:19:07 by zael-wad          #+#    #+#              #
-#    Updated: 2023/08/11 11:06:45 by zael-wad         ###   ########.fr        #
+#    Updated: 2023/08/11 11:44:59 by zael-wad         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 CC = cc
-CFLAGS = -fsanitize=address -g3 #-Wall -Wextra -Werror
+CFLAGS = #-fsanitize=address -g3 #-Wall -Wextra -Werror
 SRCS = main.c ft_split.c \
 		get_next_line/get_next_line.c get_next_line/get_next_line_utils.c\
 		help_functions.c\
@@ -34,7 +34,7 @@ $(NAME): $(OBJ)
 	$(CC) -Imlx -c $< -o $@
 
 clean:
-	rm -f $(OBJS)
+	rm -f $(OBJ)
 
 fclean: clean
 	rm -f $(NAME)

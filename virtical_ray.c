@@ -6,7 +6,7 @@
 /*   By: zael-wad <zael-wad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/10 18:51:45 by zael-wad          #+#    #+#             */
-/*   Updated: 2023/08/10 18:52:56 by zael-wad         ###   ########.fr       */
+/*   Updated: 2023/08/12 20:56:44 by zael-wad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ void	virtical_ray(t_var *data)
 	//if(sin(data->player_pos.ray_angle) == 0 || cos(data->player_pos.ray_angle) == 0)
 		//return;
 	if (data->player_pos.ray_angle >= convert_dgree(90) && data->player_pos.ray_angle <= convert_dgree(270))
-		alpha_x = (floor((int)data->player_pos.player_x / GRIDE_SIZE) * 50) - 1;
+		alpha_x = (floor((int)data->player_pos.player_x / GRIDE_SIZE) * 50) - 0.00005;
 	else
 		alpha_x = (floor((int)data->player_pos.player_x / GRIDE_SIZE) * 50) + 50;
 
