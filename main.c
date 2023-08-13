@@ -6,7 +6,7 @@
 /*   By: zael-wad <zael-wad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/31 14:18:38 by zael-wad          #+#    #+#             */
-/*   Updated: 2023/08/12 20:54:50 by zael-wad         ###   ########.fr       */
+/*   Updated: 2023/08/13 13:42:11 by zael-wad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,7 +91,10 @@ void	first_draw_line(t_var *data)
 	}
 }
 
-
+void	fix_distortion(t_var *data)
+{
+	data->player_pos.distance = data->player_pos.distance * cos(data->player_pos.ray_angle);
+}
 void	draw_line(t_var *data, int x_pos)
 {
 	int 		x;
@@ -115,9 +118,13 @@ void	draw_line(t_var *data, int x_pos)
 	virtical_ray(data);
 	horizotal_ray(data);
 	clac_player_distence(data);
+	
+	// 	if (data->player_pos.ray_angle < data->player_pos.angle_in_radian)
+	// 		data->player_pos.distance = data->player_pos.distance * cos(data->player_pos.angle_in_radian + 30);
+	// 	else
+	// 		data->player_pos.distance = data->player_pos.distance * cos(data->player_pos.angle_in_radian - 30);
 	Projected_Slice_Height = 50 / data->player_pos.distance * data->distance_to_projection_plane;
-	hight = y_height(data->map2d);
-	wall_center = (hight/ 2);
+	wall_center = (data->y_height / 2);
 	start = wall_center - (Projected_Slice_Height / 2);
 	dx = x_pos;
 	dy =  Projected_Slice_Height;
@@ -127,7 +134,10 @@ void	draw_line(t_var *data, int x_pos)
 	
 	while (i <= step)
 	{
-		my_mlx_pixel_put(data, x_pos, (int)start ,BLACK);
+		if (data->player_pos.pd < data->player_pos.pe)
+			my_mlx_pixel_put(data, x_pos, (int)start ,WHITE);
+		else 
+			my_mlx_pixel_put(data, x_pos, (int)start ,RED);
 		// x_pos += x_inc;
 		start += y_inc;
 		i++;
@@ -206,20 +216,18 @@ void	draw_sky(t_var *data)
 	}	
 }
 
+
 void	player_view_filed(t_var *data)
 {
 	double tmp;
 	double start;
 	double end;
-
-
-
 	int i;
 	i = 0;
 	clac_projextion_distance(data);
 	draw_sky(data);
 	data->player_pos.ray_angle = data->player_pos.angle_in_radian;
-	while (i < x_width(data->map2d) / 2)
+	while (i < data->x_width / 2)
 	{
 		data->player_pos.ray_angle -= 0.00097869158;
 		if (data->player_pos.ray_angle < 0)
@@ -227,11 +235,12 @@ void	player_view_filed(t_var *data)
 		i++;
 	}
 	i = 0;
-	while (i < x_width(data->map2d))
+	while (i < data->x_width)
 	{
 		if (data->player_pos.ray_angle > 2 * PI)
 			data->player_pos.ray_angle = 0;
 		data->player_pos.ray_angle += 0.00097869158;
+		
 		draw_line(data, i);
 		i++;
 	}
@@ -239,29 +248,10 @@ void	player_view_filed(t_var *data)
 	mlx_put_image_to_window(data->mlx, data->mlx_win, data->img, 0, 0);
 	// player_direction(data);
 }
-
-
-// void	draw_wall(t_var *data, double distance)
-// {
-// 	double Projected_Slice_Height;
-// 	Projected_Slice_Height = 50 / distance * 400;
-// 	int wall_center = y_hight(data->map2d) / 2;
-	
-// 	double start;
-// 	start = wall_center - (Projected_Slice_Height / 2);
-// 	int i = 0;
-// 	while (start < Projected_Slice_Height)
-// 	{
-		
-// 	}
-
-// }
-
 int move_player(int i, t_var *data)
 {
 	data->tmp_player_x = data->player_pos.player_x;
 	data->tmp_player_y = data->player_pos.player_y;
-	
 	if (i == 53)
 		destroy_fun();
 	if (i == 13)
@@ -276,11 +266,10 @@ int move_player(int i, t_var *data)
 		rotate_right(data);
 	else if (i == 123)
 		rotate_left(data);
-	if (data->tmp_player_x < 0 || data->tmp_player_y < 0 || data->tmp_player_x > x_width(data->map2d) || data->tmp_player_y > y_height(data->map2d))
+	if (data->tmp_player_x < 0 || data->tmp_player_y < 0 || data->tmp_player_x > data->x_width || data->tmp_player_y > data->y_height)
 		return 1;
 	if (data->map2d[(int)data->tmp_player_y / 50][(int)data->tmp_player_x / 50] != '1')
 	{
-		
 		data->player_pos.player_y  =  data->tmp_player_y;
 		data->player_pos.player_x  =  data->tmp_player_x;
 		rander_map2d(data);
@@ -310,6 +299,9 @@ void	initlize_varibles(t_var *data)
 	data->store_cos = 0;
 	data->store_sin = 0;
 	data->player_pos.angle_in_radian = 0;
+	data->x_width = x_width(data->map2d);
+	data->y_height = y_height(data->map2d);
+
 
 }
 
@@ -322,12 +314,10 @@ int main(int ac , char **av)
 	fd = open(av[1], O_RDONLY);
  	img.map2d = ftt_split(&img, fd);
 	img.mlx = mlx_init();
-	img.mlx_win = mlx_new_window(img.mlx, x_width(img.map2d), y_height(img.map2d), "map");
-	// printf("%d=x\n",x_width(img.map2d));
-	// printf("%d=y\n",y_height(img.map2d));
-	img.img = mlx_new_image(img.mlx, x_width(img.map2d),  y_height(img.map2d));
-	img.addr = mlx_get_data_addr(img.img, &img.bits_per_pixel, &img.line_length, &img.endian);	
 	initlize_varibles(&img);
+	img.mlx_win = mlx_new_window(img.mlx, img.x_width, img.y_height, "map");
+	img.img = mlx_new_image(img.mlx, img.x_width, img.y_height);
+	img.addr = mlx_get_data_addr(img.img, &img.bits_per_pixel, &img.line_length, &img.endian);	
 	first_rander_map2d(&img);
 	mlx_hook(img.mlx_win, 2, 1L<<1, move_player, &img);
 	// mlx_key_hook(mlx_ptr.win, key_press, &mlx_ptr);

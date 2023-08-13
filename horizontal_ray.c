@@ -6,7 +6,7 @@
 /*   By: zael-wad <zael-wad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/10 18:53:23 by zael-wad          #+#    #+#             */
-/*   Updated: 2023/08/12 20:56:53 by zael-wad         ###   ########.fr       */
+/*   Updated: 2023/08/13 13:43:56 by zael-wad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,7 @@ void	horizotal_ray(t_var *data)
                                                      
 	xs = ys / tan(data->player_pos.ray_angle);
 		
-	if (alpha_x < 0 || alpha_y < 0 || alpha_x > x_width(data->map2d) || alpha_y > y_height(data->map2d))
+	if (alpha_x < 0 || alpha_y < 0 || alpha_x > data->x_width || alpha_y >data->y_height)
 	{
 		data->player_pos.x_horizontal_line_end = INT_MAX - 1;
 		data->player_pos.y_horizontal_line_end = INT_MAX - 1;
@@ -68,7 +68,7 @@ void	horizotal_ray(t_var *data)
 				old_xs = GRIDE_SIZE;
 			if (old_ys < 0)
 				old_ys = GRIDE_SIZE;
-			if (old_xs > 0 && old_ys > 0 && old_xs < x_width(data->map2d) && old_ys < y_height(data->map2d))
+			if (old_xs > 0 && old_ys > 0 && old_xs <data->x_width && old_ys < data->y_height)
 			{
 				if (data->map2d[(int)old_ys  / 50][(int)old_xs  / 50] != '1')
 				{

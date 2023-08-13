@@ -6,7 +6,7 @@
 /*   By: zael-wad <zael-wad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/10 18:51:45 by zael-wad          #+#    #+#             */
-/*   Updated: 2023/08/12 20:56:44 by zael-wad         ###   ########.fr       */
+/*   Updated: 2023/08/13 13:43:11 by zael-wad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,7 @@ void	virtical_ray(t_var *data)
 		xs = GRIDE_SIZE;
 		
 	ys = xs * tan(data->player_pos.ray_angle);
-	if (alpha_x < 0 || alpha_y < 0 || alpha_x > x_width(data->map2d) || alpha_y > y_height(data->map2d))
+	if (alpha_x < 0 || alpha_y < 0 || alpha_x > data->x_width|| alpha_y > data->y_height)
 	{
 		data->player_pos.x_virtical_line_end = INT_MAX ;
 		data->player_pos.y_virtical_line_end = INT_MAX ;
@@ -66,7 +66,7 @@ void	virtical_ray(t_var *data)
 				old_xs = xs;
 			if (old_ys < 0)
 				old_ys = ys;
-			if (old_xs > 0 && old_ys > 0 && old_xs < x_width(data->map2d) && old_ys < y_height(data->map2d))
+			if (old_xs > 0 && old_ys > 0 && old_xs < data->x_width && old_ys < data->y_height)
 			{
 				if (data->map2d[(int)old_ys / 50][(int)old_xs  / 50] != '1')
 				{

@@ -6,7 +6,7 @@
 /*   By: zael-wad <zael-wad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/31 14:18:59 by zael-wad          #+#    #+#             */
-/*   Updated: 2023/08/12 20:53:24 by zael-wad         ###   ########.fr       */
+/*   Updated: 2023/08/13 13:36:28 by zael-wad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,15 +25,15 @@
 # define ROTATE_ANGLE 0.174533
 # define PLAYER_ANGLE 4.71239
 
-# define BLACK 0x00000000
-# define SKY 0x000080FF
+# define BLACK 	0x00000000
+# define SKY	0x000080FF
 # define GROUND 0x00A0A0A0
-# define WHITE 0x00FFFFFF
-# define RED 0x00FF0000
-# define CYAN 0x0000FFFF
-# define GREEN 0x0000FF00
+# define WHITE	0x00FFFFFF
+# define RED	0x00FF0000
+# define CYAN	0x0000FFFF
+# define GREEN	0x0000FF00
+# define BLUE	0x000000FF
 # define DARK_TURQUOISE 0x0000CED1
-# define BLUE 0x000000FF
 # define PI 3.14159265359
 # define PLAYER_SPEED 15
 # define LINE_LENTH 30
@@ -68,8 +68,8 @@ typedef struct t_player
 
 typedef struct t_var
 {
-	// int             x_width;
-	// int             y_height;
+	int             x_width;
+	int             y_height;
 	double		distance_to_projection_plane;
 	double		tmp_player_x;
 	double		tmp_player_y;
